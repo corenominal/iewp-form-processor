@@ -18,3 +18,13 @@ function iewp_form_processor_activate()
    require_once( plugin_dir_path( __FILE__ ) . 'activation/create-api-key.php' );
 }
 register_activation_hook( __FILE__, 'iewp_form_processor_activate' );
+
+/**
+ * Admin views
+ */
+require_once( plugin_dir_path( __FILE__ ) . 'admin/admin.php' );
+
+/**
+ * Endpoints
+ */
+require_once( plugin_dir_path( __FILE__ ) . 'endpoints/endpoints.php' );
