@@ -71,7 +71,8 @@ function iewp_forms_admin( $request_data )
             unset( $data['action'] );
 			unset( $data['apikey'] );
             $wpdb->insert( 'iewp_forms',
-                array( 'name' => $data['name'],
+                array( 'form' => sha1( $data['name'] . microtime() ),
+                       'name' => $data['name'],
                        'required_fields' => '',
                        'to_recipients' => '',
                        'cc_recipients' => '',
