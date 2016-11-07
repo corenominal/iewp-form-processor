@@ -84,11 +84,13 @@ jQuery(document).ready(function($){
         e.preventDefault();
         $(this).parents("li:first").remove();
         $( '#iewp-form-save-form' ).removeAttr( 'disabled' );
+        $( '#iewp-forms-save-notify' ).html( '' );
     });
 
     $( document ).on( 'change keyup', '.iewp-form-input', function()
     {
         $( '#iewp-form-save-form' ).removeAttr( 'disabled' );
+        $( '#iewp-forms-save-notify' ).html( '' );
     });
 
     /**
@@ -121,6 +123,7 @@ jQuery(document).ready(function($){
         {
             $( '#required-fields-list' ).append( '<li data-value="' + str + '"><span class="iewp-form-li-del-button" tabindex="0">X</span> ' + str + '</li> ' );
             $( '#iewp-form-save-form' ).removeAttr( 'disabled' );
+            $( '#iewp-forms-save-notify' ).html( '' );
         }
 
         $( '#iewp-form-required-field-input' ).val( '' );
@@ -156,6 +159,7 @@ jQuery(document).ready(function($){
         {
             $( '#to-recipients-list' ).append( '<li data-value="' + email + '"><span class="iewp-form-li-del-button" tabindex="0">X</span> ' + email + '</li> ' );
             $( '#iewp-form-save-form' ).removeAttr( 'disabled' );
+            $( '#iewp-forms-save-notify' ).html( '' );
         }
 
         $( '#iewp-form-to-recipients-input' ).val( '' );
@@ -191,6 +195,7 @@ jQuery(document).ready(function($){
         {
             $( '#cc-recipients-list' ).append( '<li data-value="' + email + '"><span class="iewp-form-li-del-button" tabindex="0">X</span> ' + email + '</li> ' );
             $( '#iewp-form-save-form' ).removeAttr( 'disabled' );
+            $( '#iewp-forms-save-notify' ).html( '' );
         }
 
         $( '#iewp-form-cc-recipients-input' ).val( '' );
@@ -226,6 +231,7 @@ jQuery(document).ready(function($){
         {
             $( '#bcc-recipients-list' ).append( '<li data-value="' + email + '"><span class="iewp-form-li-del-button" tabindex="0">X</span> ' + email + '</li> ' );
             $( '#iewp-form-save-form' ).removeAttr( 'disabled' );
+            $( '#iewp-forms-save-notify' ).html( '' );
         }
 
         $( '#iewp-form-bcc-recipients-input' ).val( '' );
@@ -239,11 +245,12 @@ jQuery(document).ready(function($){
     {
         e.preventDefault();
 
-        var id = $( '#iewp-form-name' ).data( 'form' );
-        console.log( id );
+        $( this ).attr( 'disabled', 'disabled' );
+        $( this ).html( '<span class="iewp_form_saving"><img src="/wp-includes/images/spinner.gif"> saving ...</span>' );
+        $( this ).removeClass( 'button-primary' );
 
-        var name = $( '#iewp-form-name' ).val();
-        console.log( name );
+        var id = $( '#iewp-form-name' ).data( 'form' );
+        var name = $( '#iewp-form-name' ).val().trim();
 
         var required_fields = [];
         $( '#required-fields-list li' ).each(function( i )
@@ -251,7 +258,6 @@ jQuery(document).ready(function($){
             required_fields.push( $( this ).data( 'value' ) );
         });
         required_fields = JSON.stringify( required_fields );
-        console.log( required_fields );
 
         var to_recipients = [];
         $( '#to-recipients-list li' ).each(function( i )
@@ -259,7 +265,6 @@ jQuery(document).ready(function($){
             to_recipients.push( $( this ).data( 'value' ) );
         });
         to_recipients = JSON.stringify( to_recipients );
-        console.log( to_recipients );
 
         var cc_recipients = [];
         $( '#cc-recipients-list li' ).each(function( i )
@@ -267,7 +272,6 @@ jQuery(document).ready(function($){
             cc_recipients.push( $( this ).data( 'value' ) );
         });
         cc_recipients = JSON.stringify( cc_recipients );
-        console.log( cc_recipients );
 
         var bcc_recipients = [];
         $( '#bcc-recipients-list li' ).each(function( i )
@@ -275,7 +279,34 @@ jQuery(document).ready(function($){
             bcc_recipients.push( $( this ).data( 'value' ) );
         });
         bcc_recipients = JSON.stringify( bcc_recipients );
-        console.log( bcc_recipients );
+
+        var data = {
+            apikey: apikey,
+            action: 'save_form',
+            id: id,
+            name: name,
+            required_fields: required_fields,
+            to_recipients: to_recipients,
+            cc_recipients: cc_recipients,
+            bcc_recipients: bcc_recipients
+        };
+
+        $.ajax({
+            url: endpoint,
+            type: 'GET',
+            dataType: 'json',
+            data: data
+        })
+        .done(function( data ) {
+            $( '#iewp-form-name' ).val( data.name );
+            $( '#iewp-form-save-form' ).addClass( 'button-primary' );
+            $( '#iewp-form-save-form' ).html( 'Save Form' );
+            var notify = '<div id="message" class="updated notice notice-success is-dismissible"><p>Form saved.</p></div>';
+            $( '#iewp-forms-save-notify' ).html( notify );
+        })
+        .fail(function() {
+            console.log("error");
+        });
 
     });
 

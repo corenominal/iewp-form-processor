@@ -99,58 +99,46 @@ function iewp_forms_admin( $request_data )
 			return $data;
 			break;
 
-        case 'get_slides':
-			global $wpdb;
-			$sql = "SELECT *
-                      FROM iewp_slick_carousel_images
-                     WHERE carousel_id = " . $data['carousel'] . "
-                     ORDER BY `order` ASC;";
-			$data['slides'] = $wpdb->get_results( $sql, ARRAY_A );
-			$data['num_rows'] = $wpdb->num_rows;
-			unset( $data['action'] );
-			unset( $data['apikey'] );
-			return $data;
-			break;
+        // case 'get_slides':
+		// 	global $wpdb;
+		// 	$sql = "SELECT *
+        //               FROM iewp_slick_carousel_images
+        //              WHERE carousel_id = " . $data['carousel'] . "
+        //              ORDER BY `order` ASC;";
+		// 	$data['slides'] = $wpdb->get_results( $sql, ARRAY_A );
+		// 	$data['num_rows'] = $wpdb->num_rows;
+		// 	unset( $data['action'] );
+		// 	unset( $data['apikey'] );
+		// 	return $data;
+		// 	break;
 
-        case 'delete_slide':
+        // case 'delete_slide':
+        //     global $wpdb;
+        //     $wpdb->delete( 'iewp_slick_carousel_images', array( 'id' => $data['id'] ), array( '%d' ) );
+        //
+		// 	unset( $data['action'] );
+		// 	unset( $data['apikey'] );
+		// 	return $data;
+		// 	break;
+
+        case 'save_form':
             global $wpdb;
-            $wpdb->delete( 'iewp_slick_carousel_images', array( 'id' => $data['id'] ), array( '%d' ) );
 
-			unset( $data['action'] );
-			unset( $data['apikey'] );
-			return $data;
-			break;
-
-        case 'save_carousel':
-            global $wpdb;
-            $wpdb->delete( 'iewp_slick_carousel_images', array( 'carousel_id' => $data['carousel_id'] ), array( '%d' ) );
             if( trim( $data['name'] ) == '' )
             {
-                $data['name'] = 'Untitled ' . $data['carousel_id'];
+                $data['name'] = 'Untitled form ' . $data['id'];
             }
-            $options = json_encode( $data['options'] );
-            $wpdb->update( 'iewp_slick_carousels', // table
-                           array( 'name' => $data['name'], 'options' => $options ), // data
-                           array( 'id' => $data['carousel_id'] ), // where
-                           array( '%s', '%s' ), // data format
+
+            $wpdb->update( 'iewp_forms', // table
+                           array( 'name' => $data['name'],
+                                  'required_fields' => $data['required_fields'],
+                                  'to_recipients' => $data['to_recipients'],
+                                  'cc_recipients' => $data['cc_recipients'],
+                                  'bcc_recipients' => $data['bcc_recipients'] ), // data
+                           array( 'id' => $data['id'] ), // where
+                           array( '%s', '%s', '%s', '%s', '%s' ), // data format
                            array( '%d' ) // where format
                          );
-            if( isset( $data['carousel'] ) && is_array( $data['carousel'] ) )
-            {
-                foreach ($data['carousel'] as $slide)
-                {
-                    $wpdb->insert( 'iewp_slick_carousel_images',
-                        array( 'carousel_id' => $slide['carousel_id'],
-                               'order' => $slide['order'],
-                               'img_url' => $slide['img_url'],
-                               'img_alt' => $slide['img_alt'],
-                               'img_title' => $slide['img_title'],
-                               'link_url' => $slide['link_url']
-                        ),
-                        array( '%d', '%d', '%s', '%s', '%s', '%s' )
-                    );
-                }
-            }
 
 			unset( $data['action'] );
 			unset( $data['apikey'] );

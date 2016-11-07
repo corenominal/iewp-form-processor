@@ -37,6 +37,8 @@ function iewp_forms_edit_callback()
 
 		<p>Use the form below to edit this form's attributes.</p>
 
+		<div id="iewp-forms-save-notify" class="iewp-forms-save-notify"></div>
+
 		<div id="iewp-slick-options-panel" class="iewp-slick-options-panel">
 			<table class="form-table">
 				<tbody>
