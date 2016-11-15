@@ -64,3 +64,13 @@ require_once( plugin_dir_path( __FILE__ ) . 'iewp_forms_create.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'iewp_forms_edit.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'iewp_forms_info.php' );
 //require_once( plugin_dir_path( __FILE__ ) . 'iewp_form_submissions.php' );
+
+/**
+ * Enqueue additional JavaScript and CSS
+ */
+function iewp_forms_enqueue_css( )
+{
+	wp_register_style( 'iewp_forms_all_css', plugin_dir_url( __FILE__ ) . 'css/iewp_forms_all.css', array(), '0.0.1', 'all' );
+	wp_enqueue_style( 'iewp_forms_all_css' );
+}
+add_action( 'admin_enqueue_scripts', 'iewp_forms_enqueue_css' );

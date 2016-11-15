@@ -1,5 +1,5 @@
-.toplevel_page_iewp_forms li:nth-child(3),
-.toplevel_page_iewp_forms li:nth-child(4) {
+#toplevel_page_iewp_forms li:nth-child(3),
+#toplevel_page_iewp_forms li:nth-child(4) {
     display: none;
 }
 

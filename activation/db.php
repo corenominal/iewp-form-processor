@@ -24,6 +24,7 @@ function iewp_form_processor_create_tables()
 			  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 			  `form_id` int(11) NOT NULL,
 			  `data` text NOT NULL DEFAULT '',
+			  `ip` varchar(255) NOT NULL DEFAULT '',
 			  `date_created` int(11) NOT NULL,
 			  PRIMARY KEY (`id`),
 			  KEY `form_id` (`form_id`)

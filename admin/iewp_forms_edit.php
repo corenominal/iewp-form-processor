@@ -12,9 +12,6 @@ function iewp_forms_edit_scripts( $hook )
 		return;
 	}
 
-    wp_register_style( 'iewp_forms_all_css', plugin_dir_url( __FILE__ ) . 'css/iewp_forms_all.css', array(), '0.0.1', 'all' );
-	wp_enqueue_style( 'iewp_forms_all_css' );
-
     wp_register_style( 'iewp_forms_edit_css', plugin_dir_url( __FILE__ ) . 'css/iewp_forms_edit.css', array(), '0.0.1', 'all' );
 	wp_enqueue_style( 'iewp_forms_edit_css' );
 
