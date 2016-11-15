@@ -36,6 +36,15 @@ function iewp_forms_admin_options()
 	);
 
 	add_submenu_page(
+		'iewp_forms', // no parent slug (removes from menu) admin.php?page=iewp_forms_edit
+		'Forms - Info', // page title
+		'Info', // menu title
+		'edit_plugins', // capability
+		'iewp_forms_info', // slug
+		'iewp_forms_info_callback' // callback function
+	);
+
+	add_submenu_page(
 		'iewp_forms', // parent slug
 		'Forms - Add New', // page title
 		'Add New', // menu title
@@ -53,4 +62,5 @@ add_action( 'admin_menu', 'iewp_forms_admin_options' );
 require_once( plugin_dir_path( __FILE__ ) . 'iewp_forms.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'iewp_forms_create.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'iewp_forms_edit.php' );
+require_once( plugin_dir_path( __FILE__ ) . 'iewp_forms_info.php' );
 //require_once( plugin_dir_path( __FILE__ ) . 'iewp_form_submissions.php' );

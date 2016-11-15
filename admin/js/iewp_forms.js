@@ -31,7 +31,7 @@ jQuery(document).ready(function($)
 					forms += '<td>' + form.created + '</td>';
                     forms += '<td class="iewp-form-form-options-cell' + form.id + '">';
                     forms += '<button data-id="' + form.id + '" class="button iewp-forms-edit-form-button">Edit</button> ';
-                    forms += '<button data-id="' + form.id + '" class="button iewp-forms-edit-form-button">Info</button> ';
+                    forms += '<button data-id="' + form.id + '" class="button iewp-forms-info-form-button">Info</button> ';
 					forms += '<button data-id="' + form.id + '" class="button iewp-forms-remove-form-button">Remove</button>';
 					forms += '<div class="remove-form-prompt remove-form-prompt' + form.id + '">';
 					forms += '<span>This action cannot be undone and any associated submissions will be deleted. Are you sure?</span>';
@@ -51,7 +51,7 @@ jQuery(document).ready(function($)
     get_forms();
 
     /**
-	 * Edit carousel
+	 * Edit form
 	 */
 	$( document ).on( 'click', '.iewp-forms-edit-form-button', function( e )
 	{
@@ -61,7 +61,7 @@ jQuery(document).ready(function($)
 	});
 
     /**
-	 * Remove carousel from list
+	 * Remove form from list
 	 */
 	$( document ).on( 'click', '.iewp-forms-remove-form-button', function( e )
 	{
@@ -103,6 +103,16 @@ jQuery(document).ready(function($)
 		{
 			console.log("OH NOES! AJAX error");
 		});
+	});
+
+    /**
+	 * Get form info
+	 */
+	$( document ).on( 'click', '.iewp-forms-info-form-button', function( e )
+	{
+        e.preventDefault();
+		var id = $( this ).attr( 'data-id' );
+        window.location.href = "admin.php?page=iewp_forms_info&form=" + id;
 	});
 
 });

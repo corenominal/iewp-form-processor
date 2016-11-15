@@ -1,3 +1,10 @@
-.toplevel_page_iewp_forms li:nth-child(3) {
+.toplevel_page_iewp_forms li:nth-child(3),
+.toplevel_page_iewp_forms li:nth-child(4) {
     display: none;
+}
+
+.iewp-forms-panel {
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
 }

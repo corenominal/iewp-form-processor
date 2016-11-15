@@ -39,7 +39,7 @@ function iewp_forms_edit_callback()
 
 		<div id="iewp-forms-save-notify" class="iewp-forms-save-notify"></div>
 
-		<div id="iewp-slick-options-panel" class="iewp-slick-options-panel">
+		<div id="iewp-forms-panel" class="iewp-forms-panel">
 			<table class="form-table">
 				<tbody>
                     <tr>
@@ -91,11 +91,12 @@ function iewp_forms_edit_callback()
 
 				</tbody>
 			</table>
-		</div>
 
-        <p>
-			<button id="iewp-form-save-form" class="button button-primary button-large" disabled="disabled">Save Form</button>
-		</p>
+			<p>
+				<button id="iewp-form-save-form" class="button button-primary button-large" disabled="disabled">Save Form</button>
+			</p>
+
+		</div>
 
 	</div>
 	<?php
