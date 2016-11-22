@@ -53,6 +53,15 @@ function iewp_forms_admin_options()
 		'iewp_forms_create_callback' // callback function
 	);
 
+	add_submenu_page(
+		'iewp_forms', // parent slug
+		'Forms - Submissions', // page title
+		'Submissions', // menu title
+		'edit_plugins', // capability
+		'iewp_forms_submissions', // slug
+		'iewp_forms_submissions_callback' // callback function
+	);
+
 }
 add_action( 'admin_menu', 'iewp_forms_admin_options' );
 
@@ -63,7 +72,7 @@ require_once( plugin_dir_path( __FILE__ ) . 'iewp_forms.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'iewp_forms_create.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'iewp_forms_edit.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'iewp_forms_info.php' );
-//require_once( plugin_dir_path( __FILE__ ) . 'iewp_form_submissions.php' );
+require_once( plugin_dir_path( __FILE__ ) . 'iewp_forms_submissions.php' );
 
 /**
  * Enqueue additional JavaScript and CSS

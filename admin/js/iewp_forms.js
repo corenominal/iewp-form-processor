@@ -27,7 +27,14 @@ jQuery(document).ready(function($)
 				$.each(data.forms, function(i, form)
 				{
 					forms += '<tr><td>' + form.name + '</td>';
-	        		forms += '<td>' + form.submissions + '</td>';
+                    if( form.submissions == '0' )
+                    {
+                        forms += '<td>' + form.submissions + '</td>';
+                    }
+                    else
+                    {
+                        forms += '<td><a href="admin.php?page=iewp_forms_submissions&name=' + form.name + '&form=' + form.id + '">' + form.submissions + '</a></td>';
+                    }
 					forms += '<td>' + form.created + '</td>';
                     forms += '<td class="iewp-form-form-options-cell' + form.id + '">';
                     forms += '<button data-id="' + form.id + '" class="button iewp-forms-edit-form-button">Edit</button> ';
@@ -95,8 +102,8 @@ jQuery(document).ready(function($)
 		})
 		.done(function( data )
 		{
-            var carousels = '<tr><td colspan="4">Refreshing ...</td></tr>';
-			$( '#the-list' ).html( carousels );
+            var forms = '<tr><td colspan="4">Refreshing ...</td></tr>';
+			$( '#the-list' ).html( forms );
 			get_forms();
 		})
 		.fail(function()

@@ -30,7 +30,7 @@ function iewp_forms_info_callback()
 	?>
 	<div class="wrap">
 
-		<h1>IEWP Forms &mdash; <span id="action">Info</span></h1>
+		<h1>IEWP Forms &mdash; Info</h1>
 
 		<p>Details for implementing this form from within your theme.</p>
 
@@ -40,21 +40,26 @@ function iewp_forms_info_callback()
 				<tbody>
 
 					<tr>
-						<th scope="row">endpoint</th>
+						<th scope="row">Endpoint</th>
 						<td>
 							<code id="iewp-form-endpoint"><?php echo site_url('wp-json/iewp_forms/processor') ?></code>
+							<p class="description">The endpoint for your AJAX calls.</p>
 						</td>
 					</tr>
 
 					<tr>
-						<th scope="row">form</th>
+						<th scope="row">Form</th>
 						<td>
-							<code id="iewp-form-field-form"></code>
+							<code class="iewp-form-field-form"></code>
+							<p class="description">
+								Required key value pair within your AJAX payload. E.g:<br>
+								{ form: '<span class="iewp-form-field-form">a2c6853c7c3e83cfb9fad7da73c79d695f31c218</span>', key: 'value' ... }
+							</p>
 						</td>
 					</tr>
 
 					<tr>
-						<th scope="row">required_fields</th>
+						<th scope="row">Required fields</th>
 						<td>
 							<span id="iewp-form-field-required"></span>
 						</td>

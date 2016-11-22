@@ -29,7 +29,7 @@ function iewp_forms_callback()
 	?>
 	<div class="wrap">
 
-		<h1>IEWP Forms <a href="admin.php?page=iewp_forms_create" id="add-new-carousel" class="page-title-action">Add New</a></h1>
+		<h1>IEWP Forms <a href="admin.php?page=iewp_forms_create" id="add-new-form" class="page-title-action">Add New</a></h1>
 
 		<p>The following forms are set-up and can be processed.</p>
 

@@ -26,11 +26,11 @@ function iewp_forms_admin( $request_data )
  		return $data;
  	}
 
+    global $wpdb;
     switch ( $data['action'] )
 	{
 		case 'list_forms':
-			global $wpdb;
-			$sql = "SELECT iewp_forms.id, name, FROM_UNIXTIME( iewp_forms.date_created, '%D %M %Y' ) AS created, COUNT(form_id) AS submissions
+            $sql = "SELECT iewp_forms.id, name, FROM_UNIXTIME( iewp_forms.date_created, '%D %M %Y' ) AS created, COUNT(form_id) AS submissions
                       FROM iewp_forms LEFT JOIN iewp_form_submissions
                         ON iewp_forms.id = iewp_form_submissions.form_id
                      GROUP BY iewp_forms.id
@@ -43,7 +43,6 @@ function iewp_forms_admin( $request_data )
 			break;
 
         case 'delete_form':
-            global $wpdb;
 			$wpdb->delete( 'iewp_forms', array( 'id' => $data['id'] ), array( '%d' ) );
             $wpdb->delete( 'iewp_form_submissions', array( 'form_id' => $data['id'] ), array( '%d' ) );
 
@@ -58,7 +57,6 @@ function iewp_forms_admin( $request_data )
                 $data['error'] = 'Please provide a name for the form';
                 return $data;
             }
-            global $wpdb;
     		$sql = "SELECT * FROM iewp_forms
     				WHERE name = '" . $data['name'] . "';";
     		$result = $wpdb->get_results( $sql, ARRAY_A );
@@ -87,7 +85,6 @@ function iewp_forms_admin( $request_data )
 			break;
 
         case 'get_form':
-            global $wpdb;
 			$sql = "SELECT * FROM iewp_forms WHERE id = " . $data['form'];
             $data['form'] = $wpdb->get_row( $sql, ARRAY_A );
             if( $wpdb->num_rows == 0 )
@@ -101,8 +98,6 @@ function iewp_forms_admin( $request_data )
 			break;
 
         case 'save_form':
-            global $wpdb;
-
             if( trim( $data['name'] ) == '' )
             {
                 $data['name'] = 'Untitled form ' . $data['id'];
@@ -123,6 +118,75 @@ function iewp_forms_admin( $request_data )
 			unset( $data['apikey'] );
 			return $data;
 			break;
+
+        case 'list_subs':
+            $sql = "SELECT COUNT(*) AS `submissions` FROM `iewp_form_submissions`";
+            if( $data['form'] != 'all' )
+            {
+                $sql .= " WHERE form_id = " . $data['form'];
+            }
+            $data['total'] = $wpdb->get_row( $sql, ARRAY_A );
+
+
+            $sql = "SELECT iewp_form_submissions.id, form_id, name, ip, FROM_UNIXTIME( iewp_form_submissions.date_created, '%Y-%m-%d %H:%i:%s' ) AS created
+                    FROM iewp_form_submissions
+                    JOIN iewp_forms
+                    ON iewp_form_submissions.form_id = iewp_forms.id ";
+            if( $data['form'] != 'all' )
+            {
+                $sql .= " WHERE form_id = " . $data['form'];
+            }
+            $sql .= " ORDER BY iewp_form_submissions.id DESC LIMIT " . $data['limit'] . " OFFSET " . $data['offset'];
+            $data['subs'] = $wpdb->get_results( $sql, ARRAY_A );
+			$data['num_rows'] = $wpdb->num_rows;
+			unset( $data['action'] );
+			unset( $data['apikey'] );
+			return $data;
+			break;
+
+        case 'get_sub':
+            $sql = "SELECT * FROM iewp_form_submissions WHERE id = " . $data['id'];
+            $data['sub'] = $wpdb->get_row( $sql, ARRAY_A );
+            if( $wpdb->num_rows == 0 )
+            {
+                $data['error'] = 'Could not find data';
+                return $data;
+            }
+            unset( $data['action'] );
+            unset( $data['apikey'] );
+            return $data;
+            break;
+
+        case 'remove_selected_subs':
+            foreach ( $data['subs'] as $sub )
+            {
+                $wpdb->delete( 'iewp_form_submissions', array( 'id' => $sub ), array( '%d' ) );
+            }
+            $sql = "SELECT COUNT(*) AS `submissions` FROM `iewp_form_submissions`";
+            if( $data['form'] != 'all' )
+            {
+                $sql .= " WHERE form_id = " . $data['form'];
+            }
+            $data['total'] = $wpdb->get_row( $sql, ARRAY_A );
+            $data['total'] = $data['total']['submissions'];
+            unset( $data['action'] );
+            unset( $data['apikey'] );
+            return $data;
+            break;
+
+        case 'remove_all_subs':
+            if( $data['form'] != 'all' )
+            {
+                $wpdb->delete( 'iewp_form_submissions', array( 'form_id' => $data['form'] ), array( '%d' ) );
+            }
+            else
+            {
+                $wpdb->query( 'TRUNCATE TABLE iewp_form_submissions' );
+            }
+            unset( $data['action'] );
+            unset( $data['apikey'] );
+            return $data;
+            break;
 
 		default:
 			$data['error'] = 'Please provide a valid action';

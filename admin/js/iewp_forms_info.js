@@ -23,23 +23,22 @@ jQuery(document).ready(function($){
         }
         else
         {
-            $( '#iewp-form-field-form' ).html( data.form.form );
+            $( '.iewp-form-field-form' ).html( data.form.form );
             $( '#iewp-form-field-required' ).html( 'none' );
-            var str = '';
-            if( data.form.required_fields !== '' )
+            if( data.form.required_fields != '[]' )
             {
-                str = '<ul class="iewp-form-required-fields-list">';
+                var li = '<ul class="iewp-form-required-fields-list">';
+                var desc = '<p class="description">';
+                desc += 'Required field(s) within your AJAX payload. E.g.<br>{';
                 var required_fields = JSON.parse( data.form.required_fields );
                 $.each(required_fields, function( key, val )
                 {
-                    str += '<li><code>' + val + '</code></li>';
+                    li += '<li><code>' + val + '</code></li>';
+                    desc += val + ": 'value', ";
                 });
-                str += '</ul>';
-            }
-
-            if( str !== '' )
-            {
-                $( '#iewp-form-field-required' ).html( str );
+                li += '</ul>';
+                desc += ' ... }</p>';
+                $( '#iewp-form-field-required' ).html( li + desc )
             }
         }
     })
