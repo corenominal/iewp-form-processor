@@ -1,6 +1,28 @@
 <?php
 if ( ! defined( 'WPINC' ) ) { die('Direct access prohibited!'); }
 
+/**
+ * Validation: UK postcodes
+ * See: https://www.townscountiespostcodes.co.uk/postcodes/tools/php-postcode-validation-script.php
+ */
+function iewp_forms_test_postcode($postcode)
+{
+    $postcode = str_replace( ' ', '', $postcode );
+    $postcode = strtoupper( $postcode );
+
+    if(preg_match("/^[A-Z]{1,2}[0-9]{2,3}[A-Z]{2}$/",$postcode)
+        || preg_match("/^[A-Z]{1,2}[0-9]{1}[A-Z]{1}[0-9]{1}[A-Z]{2}$/",$postcode)
+        || preg_match("/^GIR0[A-Z]{2}$/",$postcode))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Form processor
+ */
 function iewp_forms_processor( $request_data )
 {
     global $wpdb;
@@ -68,6 +90,20 @@ function iewp_forms_processor( $request_data )
             return $data;
         }
     }
+
+    /**
+     * Test for valid postcode, if $data['postcode'] is provided
+     */
+    if( isset( $data['postcode'] ) )
+    {
+        if ( !iewp_forms_test_postcode( $data['postcode'] ) )
+        {
+            $data['error'] = 'Please provide a valid postcode';
+            return $data;
+        }
+    }
+
+
 
     /**
      * Insert data into submissions table
