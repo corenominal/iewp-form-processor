@@ -65,6 +65,24 @@ function iewp_forms_info_callback()
 						</td>
 					</tr>
 
+					<tr>
+						<th scope="row">Security Nonce</th>
+						<td>
+							<code>&lt;input type="hidden" id="security" value="&lt;?php echo wp_create_nonce( "wp_rest" ) ?&gt;"&gt;</code>
+							<p class="description">Required nonce, set as example above. Then send as custom header with AJAX call, as example below.</p>
+							<pre><code>$.ajaxSetup({
+    beforeSend: function(xhr) {
+        xhr.setRequestHeader( 'X-WP-Nonce', $( '#security' ).val() );
+    }
+});
+
+$.ajax({
+	url: endpoint,
+	type: 'POST',
+	...</code></pre>
+						</td>
+					</tr>
+
 				</tbody>
 			</table>
 
