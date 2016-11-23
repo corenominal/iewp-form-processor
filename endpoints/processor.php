@@ -8,10 +8,6 @@ function iewp_forms_processor( $request_data )
     $data = $request_data->get_params();
 
     /**
-     * TODO nonce test
-     */
-
-    /**
      * Test the form exists
      */
     if( !isset( $data['form'] ) || trim( $data['form'] ) == '' )
@@ -19,16 +15,32 @@ function iewp_forms_processor( $request_data )
         $data['error'] = 'No form data present.';
         return $data;
     }
-    else
-    {
-        $sql = "SELECT * FROM iewp_forms WHERE form = '" . $data['form'] . "'";
-        $form = $wpdb->get_row( $sql, ARRAY_A );
 
-        if( $wpdb->num_rows === 0 )
-        {
-            $data['error'] = 'Form not found.';
-            return $data;
-        }
+    /**
+     * Test nonce
+     */
+     if( !isset( $_SERVER['HTTP_X_WP_NONCE'] ) || trim( $_SERVER['HTTP_X_WP_NONCE'] ) == '' )
+     {
+         $data['error'] = 'Nonce not set.';
+         return $data;
+     }
+
+     if( ! wp_verify_nonce( $_SERVER['HTTP_X_WP_NONCE'], 'wp_rest' ) )
+     {
+         $data['error'] = 'Security field mismatch.';
+         return $data;
+     }
+
+    /**
+     * Test form actually exists
+     */
+    $sql = "SELECT * FROM iewp_forms WHERE form = '" . $data['form'] . "'";
+    $form = $wpdb->get_row( $sql, ARRAY_A );
+
+    if( $wpdb->num_rows === 0 )
+    {
+        $data['error'] = 'Form not found.';
+        return $data;
     }
 
     /**
