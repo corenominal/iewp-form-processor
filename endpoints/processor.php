@@ -124,7 +124,7 @@ function iewp_forms_processor( $request_data )
     /**
      * Test for valid postcode, if $data['postcode'] is provided
      */
-    if( isset( $data['postcode'] ) )
+    if( isset( $data['postcode'] ) && trim($data['postcode']) != '' )
     {
         if ( !iewp_forms_test_postcode( $data['postcode'] ) )
         {
