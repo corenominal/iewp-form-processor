@@ -96,39 +96,60 @@ jQuery(document).ready(function($){
     /**
      * Add required field list item
      */
-    $( document ).on('click', '#iewp-forms-add-required-field-button', function( e )
+    $( document ).on( 'click', '#iewp-forms-add-required-field-button', function( e )
     {
         e.preventDefault();
-        var str = $( '#iewp-form-required-field-input' ).val().trim().toLowerCase();
-        str = str.replace( /[^0-9a-z_]/gi, '' );
+        do_tags();
+    });
 
-        if( str === '' )
+    $( document ).on( 'keyup', '#iewp-form-required-field-input', function( e )
+    {
+        e.preventDefault();
+        if (e.keyCode == 13)
         {
-            $( '#iewp-form-required-field-input' ).val( '' );
-            $( '#iewp-form-required-field-input' ).focus();
-            return;
+            do_tags();
         }
+    });
 
-        var dup = false;
-        $( '#required-fields-list li' ).each(function( i )
+    function do_tags()
+    {
+        var str = $( '#iewp-form-required-field-input' ).val().trim().toLowerCase();
+
+        var strs = str.split( ',' );
+
+        $.each( strs, function( i, str )
         {
-            test = $( this ).data( 'value' );
-            if( test === str )
+            str = str.trim();
+            str = str.replace( /[^0-9a-z_]/gi, '' );
+
+            if( str === '' )
             {
-                dup = true;
+                $( '#iewp-form-required-field-input' ).val( '' );
+                $( '#iewp-form-required-field-input' ).focus();
+                return;
+            }
+
+            var dup = false;
+            $( '#required-fields-list li' ).each(function( i )
+            {
+                test = $( this ).data( 'value' );
+                if( test === str )
+                {
+                    dup = true;
+                }
+            });
+
+            if( dup === false )
+            {
+                $( '#required-fields-list' ).append( '<li data-value="' + str + '"><span class="iewp-form-li-del-button" tabindex="0">X</span> ' + str + '</li> ' );
+                $( '#iewp-form-save-form' ).removeAttr( 'disabled' );
+                $( '#iewp-forms-save-notify' ).html( '' );
             }
         });
 
-        if( dup === false )
-        {
-            $( '#required-fields-list' ).append( '<li data-value="' + str + '"><span class="iewp-form-li-del-button" tabindex="0">X</span> ' + str + '</li> ' );
-            $( '#iewp-form-save-form' ).removeAttr( 'disabled' );
-            $( '#iewp-forms-save-notify' ).html( '' );
-        }
-
         $( '#iewp-form-required-field-input' ).val( '' );
         $( '#iewp-form-required-field-input' ).focus();
-    });
+    }
 
     /**
      * Add to_recipients
@@ -136,35 +157,57 @@ jQuery(document).ready(function($){
     $( document ).on('click', '#iewp-forms-add-to-recipients-button', function( e )
     {
         e.preventDefault();
-        var email = $( '#iewp-form-to-recipients-input' ).val().trim();
+        do_recipients();
+    });
 
-        if( email === '' || validateEmail(email) === false )
+    $( document ).on( 'keyup', '#iewp-form-to-recipients-input', function( e )
+    {
+        e.preventDefault();
+        if (e.keyCode == 13)
         {
-            $( '#iewp-form-to-recipients-input' ).val( '' );
-            $( '#iewp-form-to-recipients-input' ).focus();
-            return;
+            do_recipients();
         }
+    });
 
-        var dup = false;
-        $( '#to-recipients-list li' ).each(function( i )
+    function do_recipients()
+    {
+        var emails = $( '#iewp-form-to-recipients-input' ).val().trim();
+
+        var emails = emails.split( ',' );
+
+        $.each( emails, function( i, email )
         {
-            test = $( this ).data( 'value' );
-            if( test === email )
+
+            email = email.trim();
+
+            if( email === '' || validateEmail(email) === false )
             {
-                dup = true;
+                $( '#iewp-form-to-recipients-input' ).val( '' );
+                $( '#iewp-form-to-recipients-input' ).focus();
+                return;
+            }
+
+            var dup = false;
+            $( '#to-recipients-list li' ).each(function( i )
+            {
+                test = $( this ).data( 'value' );
+                if( test === email )
+                {
+                    dup = true;
+                }
+            });
+
+            if( dup === false )
+            {
+                $( '#to-recipients-list' ).append( '<li data-value="' + email + '"><span class="iewp-form-li-del-button" tabindex="0">X</span> ' + email + '</li> ' );
+                $( '#iewp-form-save-form' ).removeAttr( 'disabled' );
+                $( '#iewp-forms-save-notify' ).html( '' );
             }
         });
 
-        if( dup === false )
-        {
-            $( '#to-recipients-list' ).append( '<li data-value="' + email + '"><span class="iewp-form-li-del-button" tabindex="0">X</span> ' + email + '</li> ' );
-            $( '#iewp-form-save-form' ).removeAttr( 'disabled' );
-            $( '#iewp-forms-save-notify' ).html( '' );
-        }
-
         $( '#iewp-form-to-recipients-input' ).val( '' );
         $( '#iewp-form-to-recipients-input' ).focus();
-    });
+    }
 
     /**
      * Add cc_recipients
@@ -172,35 +215,57 @@ jQuery(document).ready(function($){
     $( document ).on('click', '#iewp-forms-add-cc-recipients-button', function( e )
     {
         e.preventDefault();
-        var email = $( '#iewp-form-cc-recipients-input' ).val().trim();
+        do_cc_recipients();
+    });
 
-        if( email === '' || validateEmail(email) === false )
+    $( document ).on( 'keyup', '#iewp-form-cc-recipients-input', function( e )
+    {
+        e.preventDefault();
+        if (e.keyCode == 13)
         {
-            $( '#iewp-form-cc-recipients-input' ).val( '' );
-            $( '#iewp-form-cc-recipients-input' ).focus();
-            return;
+            do_cc_recipients();
         }
+    });
 
-        var dup = false;
-        $( '#cc-recipients-list li' ).each(function( i )
+    function do_cc_recipients()
+    {
+        var emails = $( '#iewp-form-cc-recipients-input' ).val().trim();
+
+        var emails = emails.split( ',' );
+
+        $.each( emails, function( i, email )
         {
-            test = $( this ).data( 'value' );
-            if( test === email )
+
+            email = email.trim();
+
+            if( email === '' || validateEmail(email) === false )
             {
-                dup = true;
+                $( '#iewp-form-cc-recipients-input' ).val( '' );
+                $( '#iewp-form-cc-recipients-input' ).focus();
+                return;
+            }
+
+            var dup = false;
+            $( '#cc-recipients-list li' ).each(function( i )
+            {
+                test = $( this ).data( 'value' );
+                if( test === email )
+                {
+                    dup = true;
+                }
+            });
+
+            if( dup === false )
+            {
+                $( '#cc-recipients-list' ).append( '<li data-value="' + email + '"><span class="iewp-form-li-del-button" tabindex="0">X</span> ' + email + '</li> ' );
+                $( '#iewp-form-save-form' ).removeAttr( 'disabled' );
+                $( '#iewp-forms-save-notify' ).html( '' );
             }
         });
 
-        if( dup === false )
-        {
-            $( '#cc-recipients-list' ).append( '<li data-value="' + email + '"><span class="iewp-form-li-del-button" tabindex="0">X</span> ' + email + '</li> ' );
-            $( '#iewp-form-save-form' ).removeAttr( 'disabled' );
-            $( '#iewp-forms-save-notify' ).html( '' );
-        }
-
         $( '#iewp-form-cc-recipients-input' ).val( '' );
         $( '#iewp-form-cc-recipients-input' ).focus();
-    });
+    }
 
     /**
      * Add bcc_recipients
@@ -208,35 +273,57 @@ jQuery(document).ready(function($){
     $( document ).on('click', '#iewp-forms-add-bcc-recipients-button', function( e )
     {
         e.preventDefault();
-        var email = $( '#iewp-form-bcc-recipients-input' ).val().trim();
+        do_bcc_recipients();
+    });
 
-        if( email === '' || validateEmail(email) === false )
+    $( document ).on( 'keyup', '#iewp-form-bcc-recipients-input', function( e )
+    {
+        e.preventDefault();
+        if (e.keyCode == 13)
         {
-            $( '#iewp-form-bcc-recipients-input' ).val( '' );
-            $( '#iewp-form-bcc-recipients-input' ).focus();
-            return;
+            do_bcc_recipients();
         }
+    });
 
-        var dup = false;
-        $( '#bcc-recipients-list li' ).each(function( i )
+    function do_bcc_recipients()
+    {
+        var emails = $( '#iewp-form-bcc-recipients-input' ).val().trim();
+
+        var emails = emails.split( ',' );
+
+        $.each( emails, function( i, email )
         {
-            test = $( this ).data( 'value' );
-            if( test === email )
+
+            email = email.trim();
+
+            if( email === '' || validateEmail(email) === false )
             {
-                dup = true;
+                $( '#iewp-form-bcc-recipients-input' ).val( '' );
+                $( '#iewp-form-bcc-recipients-input' ).focus();
+                return;
+            }
+
+            var dup = false;
+            $( '#bcc-recipients-list li' ).each(function( i )
+            {
+                test = $( this ).data( 'value' );
+                if( test === email )
+                {
+                    dup = true;
+                }
+            });
+
+            if( dup === false )
+            {
+                $( '#bcc-recipients-list' ).append( '<li data-value="' + email + '"><span class="iewp-form-li-del-button" tabindex="0">X</span> ' + email + '</li> ' );
+                $( '#iewp-form-save-form' ).removeAttr( 'disabled' );
+                $( '#iewp-forms-save-notify' ).html( '' );
             }
         });
 
-        if( dup === false )
-        {
-            $( '#bcc-recipients-list' ).append( '<li data-value="' + email + '"><span class="iewp-form-li-del-button" tabindex="0">X</span> ' + email + '</li> ' );
-            $( '#iewp-form-save-form' ).removeAttr( 'disabled' );
-            $( '#iewp-forms-save-notify' ).html( '' );
-        }
-
         $( '#iewp-form-bcc-recipients-input' ).val( '' );
         $( '#iewp-form-bcc-recipients-input' ).focus();
-    });
+    }
 
     /**
      * Save form
