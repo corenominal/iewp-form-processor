@@ -21,6 +21,15 @@ function iewp_forms_test_postcode($postcode)
 }
 
 /**
+ * Validation: U.S. zip codes
+ * See: http://docstore.mik.ua/orelly/webprog/pcook/ch09_03.htm
+ */
+function iewp_forms_test_zipcode($zipcode)
+{
+    return preg_match('/^[0-9]{5}([- ]?[0-9]{4})?$/', $zipcode);
+}
+
+/**
  * Form processor
  */
 function iewp_forms_processor( $request_data )
@@ -122,6 +131,18 @@ function iewp_forms_processor( $request_data )
     }
 
     /**
+     * Test for valid U.S. zip code, if $data['zipcode'] is provided
+     */
+    if( isset( $data['zipcode'] ) && trim($data['zipcode']) != '' )
+    {
+        if ( !iewp_forms_test_zipcode( $data['zipcode'] ) )
+        {
+            $data['error'] = 'Please provide a valid zipcode';
+            return $data;
+        }
+    }
+
+    /**
      * Test for valid postcode, if $data['postcode'] is provided
      */
     if( isset( $data['postcode'] ) && trim($data['postcode']) != '' )
@@ -132,8 +153,6 @@ function iewp_forms_processor( $request_data )
             return $data;
         }
     }
-
-
 
     /**
      * Insert data into submissions table
