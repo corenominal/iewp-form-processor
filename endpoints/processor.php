@@ -84,9 +84,39 @@ function iewp_forms_processor( $request_data )
      */
     if( isset( $data['email'] ) )
     {
-        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL) === true)
+        if ( !filter_var($data['email'], FILTER_VALIDATE_EMAIL) === true )
         {
             $data['error'] = 'Please provide a valid email address';
+            return $data;
+        }
+    }
+
+    /**
+     * Test for valid URL, if $data['url'] is provided
+     */
+    if( isset( $data['url'] ) && trim($data['url']) != '' )
+    {
+        if ( !filter_var( $data['url'], FILTER_VALIDATE_URL ) === true )
+        {
+            $data['error'] = 'Please provide a valid URL';
+            return $data;
+        }
+    }
+
+    /**
+     * Test for valid URL, if $data['url'] is provided
+     */
+    if( isset( $data['website'] ) && trim($data['website']) != '' )
+    {
+        $url = parse_url( $data['website'] );
+        if ( empty( $url['scheme'] ) )
+        {
+            $website = 'http://' . $data['website'];
+        }
+
+        if ( !filter_var( $website, FILTER_VALIDATE_URL ) === true )
+        {
+            $data['error'] = 'Please provide a valid website address';
             return $data;
         }
     }
