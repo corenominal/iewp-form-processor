@@ -5,10 +5,13 @@ jQuery(document).ready(function($)
 	 */
     function get_forms()
     {
+        $( '.tablenav-pages-navspan' ).prop('disabled', 'disabled');
         var endpoint = $( '#iewp-forms' ).data( 'endpoint' );
         var data = {
             apikey: $( '#iewp-forms' ).data( 'apikey' ),
-            action: 'list_forms'
+            action: 'list_forms',
+            offset: $( '#iewp-forms' ).data( 'offset' ),
+            limit: $( '#iewp-forms' ).data( 'limit' )
         };
         $.ajax({
             url: endpoint,
@@ -18,7 +21,49 @@ jQuery(document).ready(function($)
         })
         .done(function( data ) {
             var forms = '';
-			if( data.num_rows == 0 )
+            var items = data.total;
+
+            // Paging
+            $( '.displaying-num' ).html( items + ' items' );
+            if( data.num_rows === 0 && data.total > 0 )
+            {
+                var offset = $( '#iewp-forms' ).data( 'offset' );
+                var limit = $( '#iewp-forms' ).data( 'limit' );
+                offset = offset - limit;
+                $( '#iewp-forms' ).data( 'offset', offset );
+                get_forms();
+                return;
+            }
+            if( items > 0 )
+            {
+                var limit = $( '#iewp-forms' ).data( 'limit' );
+                var pages = Math.ceil( items / limit );
+                $( '#iewp-forms' ).data( 'pages', pages );
+                $( '#iewp-forms' ).data( 'total', items );
+                var offset = $( '#iewp-forms' ).data( 'offset' );
+                var page = (offset + limit) / limit;
+                $( '.current-page' ).html( page );
+                $( '.total-pages' ).html( pages );
+
+                if( page < pages )
+                {
+                    $( '.page-next' ).removeProp('disabled');
+                    $( '.page-last' ).removeProp('disabled');
+                }
+
+                if( page > 1 )
+                {
+                    $( '.page-prev' ).removeProp('disabled');
+                    $( '.page-first' ).removeProp('disabled');
+                }
+
+            }
+            else
+            {
+                $( '.tablenav-pages-navspan' ).prop('disabled', 'disabled');
+            }
+
+            if( items == 0 )
 			{
 				forms = '<tr><td colspan="4">No forms found!</td></tr>';
 			}
@@ -121,5 +166,50 @@ jQuery(document).ready(function($)
 		var id = $( this ).attr( 'data-id' );
         window.location.href = "admin.php?page=iewp_forms_info&form=" + id;
 	});
+
+    /**
+     * Paging
+     */
+    $( document ).on( 'click', '.page-first', function( e )
+    {
+        e.preventDefault();
+        $( '#iewp-forms' ).data( 'offset', 0 );
+        on_page();
+    });
+
+    $( document ).on( 'click', '.page-prev', function( e )
+    {
+        e.preventDefault();
+        var offset = $( '#iewp-forms' ).data( 'offset' );
+        var limit = $( '#iewp-forms' ).data( 'limit' );
+        offset = offset - limit;
+        $( '#iewp-forms' ).data( 'offset', offset );
+        on_page();
+    });
+
+    $( document ).on( 'click', '.page-last', function( e )
+    {
+        e.preventDefault();
+        var pages = $( '#iewp-forms' ).data( 'pages' );
+        var limit = $( '#iewp-forms' ).data( 'limit' );
+        var offset = ( pages * limit ) - limit;
+        $( '#iewp-forms' ).data( 'offset', offset );
+        on_page();
+    });
+
+    $( document ).on( 'click', '.page-next', function( e )
+    {
+        e.preventDefault();
+        var offset = $( '#iewp-forms' ).data( 'offset' );
+        var limit = $( '#iewp-forms' ).data( 'limit' );
+        offset = offset + limit;
+        $( '#iewp-forms' ).data( 'offset', offset );
+        on_page();
+    });
+
+    function on_page()
+    {
+        get_forms();
+    }
 
 });

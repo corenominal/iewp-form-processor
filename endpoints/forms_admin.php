@@ -33,10 +33,11 @@ function iewp_forms_admin( $request_data )
             $sql = "SELECT iewp_forms.id, name, FROM_UNIXTIME( iewp_forms.date_created, '%D %M %Y' ) AS created, COUNT(form_id) AS submissions
                       FROM iewp_forms LEFT JOIN iewp_form_submissions
                         ON iewp_forms.id = iewp_form_submissions.form_id
-                     GROUP BY iewp_forms.id
-                     ORDER BY iewp_forms.id DESC;";
+                     GROUP BY iewp_forms.id";
+            $sql .= " ORDER BY iewp_forms.id DESC LIMIT " . $data['limit'] . " OFFSET " . $data['offset'];
 			$data['forms'] = $wpdb->get_results( $sql, ARRAY_A );
 			$data['num_rows'] = $wpdb->num_rows;
+            $data['total'] = $wpdb->get_var( "SELECT COUNT(*) FROM iewp_forms" );
 			unset( $data['action'] );
 			unset( $data['apikey'] );
 			return $data;

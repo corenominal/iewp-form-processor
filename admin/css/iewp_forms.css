@@ -19,3 +19,9 @@ table.forms-list td:nth-child(4) {
     display: inline-block;
     margin: 6px 10px 0 0;
 }
+
+.paging-input {
+    padding-top: 6px;
+    height: 25px;
+    display: inline-block;
+}
