@@ -1,5 +1,7 @@
 jQuery(document).ready(function($){
 
+    $( '#form_name' ).focus();
+
     $( document ).on( 'submit', '#create-form-form', function( e )
 	{
 		e.preventDefault();
