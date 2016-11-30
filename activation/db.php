@@ -9,6 +9,7 @@ function iewp_form_processor_create_tables()
 
 	$sql = "CREATE TABLE IF NOT EXISTS `iewp_forms` (
 			  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+			  `form` varchar(255) NOT NULL DEFAULT '',
 			  `name` varchar(255) NOT NULL DEFAULT '',
               `required_fields` varchar(255) NOT NULL DEFAULT '',
               `to_recipients` varchar(255) NOT NULL DEFAULT '',
