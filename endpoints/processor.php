@@ -158,6 +158,13 @@ function iewp_forms_processor( $request_data )
      * Insert data into submissions table
      */
     unset( $data['form'] );
+    
+    if( isset( $data['email_subject'] ) )
+    {
+        $subject = $data['email_subject'];
+        unset( $data['email_subject'] );
+    }
+
     $wpdb->insert( 'iewp_form_submissions',
         array( 'form_id' => $form['id'],
                'data' => json_encode( $data ),
@@ -174,7 +181,10 @@ function iewp_forms_processor( $request_data )
     $to = json_decode( $form['to_recipients'] );
     if( count( $to ) > 0 )
     {
-        $subject = get_bloginfo( 'name' ) . ': form submission';
+        if( !isset( $subject ) )
+        {
+            $subject = get_bloginfo( 'name' ) . ': form submission';
+        }
 
         $message  = 'Form submission from website: ' . get_bloginfo( 'name' ) . "\r\n";
         $message .= 'Submitted on: ' . date('l jS \of F Y H:i:s') . "\r\n";
